@@ -1,6 +1,6 @@
 # BoundaryEvent
 
-Wrapper for the Boundary API.
+Wrapper for the Boundary Event API.
 
 ## Installation
 
