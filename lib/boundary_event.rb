@@ -53,7 +53,19 @@ class BoundaryEvent
 				request = Net::HTTP::Post.new(uri.request_uri)
 				request.body = @event_data.to_json
 
-				
+				# Set HTTP headers (credentials, content type)
+				headers.each{|k,v|
+					request[k] = v
+				}
+
+				event_create = http.request(request)
+
+				if event_create.kind_of?(Net::HTTPSuccess)
+					puts "Bounday event successfully created"
+				else
+					$stderr.print "Request to #{uri.request_uri} responded with #{event_create.code}\n"
+					$stderr.print "#{event_create.body}\n"
+				end
 			end
 		rescue Timeout::Error
 			$stderr.print "Timed out while creating Boundary Event"
