@@ -30,7 +30,7 @@ class BoundaryEvent
 			:properties => (params.fetch(:properties, nil) unless !params.has_key?(:properties)),
 			:source => (params.fetch(:source, nil) unless !params.has_key?(:source)),
 			:sender => (params.fetch(:sender, nil) unless !params.has_key?(:sender)),
-			:fingerprint_fields => (params.fetch(:fingerprint_fields, nil) unless !params.has_key?(:fingerprint_fields)),
+			:fingerprintFields => (params.fetch(:fingerprint_fields, nil) unless !params.has_key?(:fingerprint_fields)),
 		}
 	end
 
@@ -51,14 +51,16 @@ class BoundaryEvent
 		begin
 			timeout(10) do 
 				request = Net::HTTP::Post.new(uri.request_uri)
-				request.body = @event_data.to_json
+				request.body = @event_data.delete_if { |k,v| v.nil? }.to_json
+
+				puts request.body
 
 				# Set HTTP headers (credentials, content type)
 				headers.each{|k,v|
 					request[k] = v
 				}
 
-				event_create = http.request(request)
+				event_create = http_conn.request(request)
 
 				if event_create.kind_of?(Net::HTTPSuccess)
 					puts "Bounday event successfully created"
