@@ -1,5 +1,11 @@
 require "boundary_event/version"
 
+require "base64"
+require "json"
+require "net/http"
+require "net/https"
+require "uri"
+
 class BoundaryEvent
 	attr_accessor :api_key, :org_id
 	
