@@ -31,6 +31,7 @@ class BoundaryEvent
 			:source => (params.fetch(:source, nil) unless !params.has_key?(:source)),
 			:sender => (params.fetch(:sender, nil) unless !params.has_key?(:sender)),
 			:fingerprintFields => (params.fetch(:fingerprint_fields, nil) unless !params.has_key?(:fingerprint_fields)),
+			:message => (params.fetch(:message, nil) unless !params.has_key?(:message)),
 		}
 	end
 
@@ -53,8 +54,6 @@ class BoundaryEvent
 				request = Net::HTTP::Post.new(uri.request_uri)
 				request.body = @event_data.delete_if { |k,v| v.nil? }.to_json
 
-				puts request.body
-
 				# Set HTTP headers (credentials, content type)
 				headers.each{|k,v|
 					request[k] = v
@@ -63,7 +62,7 @@ class BoundaryEvent
 				event_create = http_conn.request(request)
 
 				if event_create.kind_of?(Net::HTTPSuccess)
-					puts "Bounday event successfully created"
+					puts "Boundary event successfully created"
 				else
 					$stderr.print "Request to #{uri.request_uri} responded with #{event_create.code}\n"
 					$stderr.print "#{event_create.body}\n"
